@@ -3,7 +3,7 @@
  */
 
 const { hasUncaughtExceptionCaptureCallback } = require("process");
-const { game, newGame, showScore } = require("../game");
+const { game, newGame, showScore, addTurn, lightsOn } = require("../game");
 
 beforeAll(() => {
     let fs = require("fs");
@@ -44,10 +44,6 @@ In summary, this code snippet sets up a test environment (presumably for front-e
 It then injects these contents into the current document as if it were a web page, effectively simulating loading the "index.html" file in a browser environment. 
 This can be useful for testing web applications or components that rely on the content of "index.html" without actually opening a browser.
 
-
-
-
-
 */
 
 describe("game object contains keys", () => {
@@ -83,8 +79,8 @@ describe("newGame works correctly", () => {
         expect(game.score).toEqual(0);
     });
 
-    test("should clear the computer sequence array", () => {
-        expect(game.currentGame.length).toBe(0);
+    test("There should be one move in the computer's game array", () => {
+        expect(game.currentGame.length).toBe(1);
     });
 
     test("should clear the playerMoves array", () => {
@@ -96,3 +92,36 @@ describe("newGame works correctly", () => {
     });
 });
 
+// Adding interactivity the game
+
+/*
+beforeAll()
+beforeEach()
+afterEach()
+*/
+
+describe("gameplay works correctly", () => {
+    beforeEach(() => {
+        game.score = 0;
+        game.currentGame = [];
+        game.playerMoves = [];
+        addTurn();
+    });
+
+    afterEach(() => {
+        game.score = 0;
+        game.currentGame = [];
+        game.playerMoves = [];
+    });
+
+    test("addTurn adds a new turn to the game", () => {
+        addTurn();
+        expect(game.currentGame.length).toBe(2);
+    });
+
+    test("should add correct class to light up the buttons", () => {
+        let button = document.getElementById(game.currentGame[0]);
+        lightsOn(game.currentGame[0]);
+        expect(button.classList).toContain("light");
+    });
+});
